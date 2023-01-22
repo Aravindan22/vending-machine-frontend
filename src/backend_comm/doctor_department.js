@@ -20,7 +20,7 @@ export function getDepartments(setDepartments, setIsDepartmentsLoading) {
     });
 }
 
-export function getDoctors(department, setDoctors, setIsDoctorsLoading) {
+export function getDoctors(department, setDoctors, setIsDoctorsLoading = null) {
   let config = {
     method: "get",
     url: `${host}/list/doctors?department=${department}`,
@@ -31,7 +31,6 @@ export function getDoctors(department, setDoctors, setIsDoctorsLoading) {
     .then((response) => {
       const data = response.data;
       setDoctors(data["Doctors"]);
-      setIsDoctorsLoading(false);
     })
     .catch((error) => {
       console.log(error);
@@ -219,6 +218,28 @@ export function resetToken(doctor, setPatientDetails) {
       if (response.status == 200) {
         const data = response.data;
         getPatients(doctor, setPatientDetails);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+export function addNewDoctor(department, doctor, setDoctors) {
+  let config = {
+    method: "put",
+    url: `${host}/add_doctor?doctor=${doctor}&department=${department}`,
+    headers: {},
+  };
+
+  axios(config)
+    .then((response) => {
+      if (response.status == 200) {
+        const data = response.data;
+        getDoctors(department, setDoctors);
+      } else {
+        console.log(response.status);
+        console.log(response.data);
       }
     })
     .catch((error) => {

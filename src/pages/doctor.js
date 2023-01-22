@@ -15,6 +15,8 @@ import {
   Button,
   Select,
   TableBody,
+  Stack,
+  TextField,
 } from "@mui/material";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -28,6 +30,7 @@ import {
   consult,
   diagonsed,
   resetToken,
+  addNewDoctor,
 } from "@/backend_comm/doctor_department";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
@@ -38,7 +41,7 @@ export default function Doctor() {
   const [departments, setDepartments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [doctors, setDoctors] = useState([]);
-
+  const [newDoctor, setNewDoctor] = useState("");
   const [patientDetailsList, setPatientDetailsList] = useState([]);
 
   //  #endregion
@@ -162,6 +165,25 @@ export default function Doctor() {
       </Table>
     </TableContainer>
   );
+
+  const addDoctor = (
+    <Stack>
+      <TextField
+        onChange={(e) => {
+          setNewDoctor(e.target.value);
+        }}
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          addNewDoctor(department, newDoctor, setDoctors);
+        }}
+      >
+        Add New Doctor
+      </Button>
+    </Stack>
+  );
   // #endregion
   return (
     <>
@@ -184,6 +206,7 @@ export default function Doctor() {
           {departmentChosing}
         </Grid>
 
+        {department && <Grid item>{addDoctor}</Grid>}
         {department && doctors.length > 0 ? (
           <Grid item sx={{ minWidth: "20%" }}>
             {doctorChosing}
