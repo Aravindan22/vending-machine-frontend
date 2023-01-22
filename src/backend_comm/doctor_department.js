@@ -1,5 +1,6 @@
 import axios from "axios";
-const host = "http://localhost:8000";
+// const host = "http://localhost:8000";
+const host = "https://vending-machinebackend-production.up.railway.app";
 
 export function getDepartments(setDepartments, setIsDepartmentsLoading) {
   let config = {
@@ -120,8 +121,13 @@ export function getPatients(doctor, setPatientDetails) {
   axios(config)
     .then((response) => {
       if (response.status == 200) {
+        console.log(response);
+
         const data = response.data;
-        setPatientDetails(data["details"]);
+
+        data === null
+          ? setPatientDetails([])
+          : setPatientDetails(data["details"]);
       } else {
         console.log(response.status);
         console.log(response.data);
@@ -154,7 +160,6 @@ export function consult(token, doctor, setPatientDetails) {
       console.log(error);
     });
 }
-
 export function diagonsed(token, doctor, setPatientDetails) {
   let config = {
     method: "put",
@@ -195,6 +200,25 @@ export function getTokenStatus(token, setTokenStatus) {
       } else {
         console.log(response.status);
         console.log(response.data);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+export function resetToken(doctor, setPatientDetails) {
+  let config = {
+    method: "delete",
+    url: `${host}/reset_tkn?doctor=${doctor}`,
+    headers: {},
+  };
+
+  axios(config)
+    .then((response) => {
+      if (response.status == 200) {
+        const data = response.data;
+        getPatients(doctor, setPatientDetails);
       }
     })
     .catch((error) => {

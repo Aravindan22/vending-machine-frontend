@@ -27,7 +27,9 @@ import {
   getPatients,
   consult,
   diagonsed,
+  resetToken,
 } from "@/backend_comm/doctor_department";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 export default function Doctor() {
   // #region state variables
@@ -71,7 +73,10 @@ export default function Doctor() {
           value={department}
           label="Department"
           onChange={(e) => {
+            setDoctors([]);
+            setDoctor("");
             setDepartment(e.target.value);
+            setPatientDetailsList([]);
           }}
         >
           {departments.map((x) => {
@@ -96,6 +101,7 @@ export default function Doctor() {
           value={doctor}
           label="Doctor"
           onChange={(e) => {
+            setPatientDetailsList([]);
             setDoctor(e.target.value);
             getPatients(e.target.value, setPatientDetailsList);
           }}
@@ -183,7 +189,20 @@ export default function Doctor() {
             {doctorChosing}
           </Grid>
         ) : null}
-
+        {doctor.length > 0 ? (
+          <Grid item>
+            <Button
+              endIcon={<RestartAltIcon />}
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                resetToken(doctor, setPatientDetailsList);
+              }}
+            >
+              Reset Tokens for the day
+            </Button>
+          </Grid>
+        ) : null}
         {department != "" &&
         doctor.length != "" &&
         patientDetailsList.length > 0 ? (
